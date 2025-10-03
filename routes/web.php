@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\BidController;
 
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register.form'); 
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
@@ -22,3 +23,6 @@ Route::resource('auctions', AuctionController::class)->middleware('auth');
 Route::get('/', function () {
     return view('welcome');
 });
+ 
+Route::get('auctions/{auction}/bids/create', [BidController::class, 'create'])->name('bids.create')->middleware('auth');
+Route::post('auctions/{auction}/bids', [BidController::class, 'store'])->name('bids.store')->middleware('auth');

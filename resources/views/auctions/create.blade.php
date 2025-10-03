@@ -11,8 +11,8 @@
 <form action="{{ route('auctions.store') }}" method="POST">
     @csrf
     <input type="text" name="product" placeholder="Product Name" required>
-    <input type="datetime-local" name="auction_start" placeholder="Auction Start" required>
-    <input type="datetime-local" name="auction_end" placeholder="Auction End" required>
+    <input type="datetime-local" name="auction_start" required>
+    <input type="datetime-local" name="auction_end" required>
     <button type="submit">Create</button>
 </form>
 

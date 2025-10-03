@@ -25,6 +25,7 @@
             <td>{{ $auction->auction_end }}</td>
             <td>
                 <a href="{{ route('auctions.edit', $auction->id) }}">Edit</a> |
+                <a href="{{ route('bids.create', $auction->id) }}">Bid</a> |
                 <form action="{{ route('auctions.destroy', $auction->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
