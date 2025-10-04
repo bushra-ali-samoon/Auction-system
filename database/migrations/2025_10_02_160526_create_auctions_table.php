@@ -14,8 +14,10 @@ return new class extends Migration
     Schema::create('auctions', function (Blueprint $table) {
         $table->id();
         $table->string('product');
-        $table->timestamp('auction_start');
-        $table->timestamp('auction_end');
+ $table->timestamp('auction_start')->useCurrent();
+$table->timestamp('auction_end')->useCurrent();
+
+
         $table->timestamps();
     });
 }

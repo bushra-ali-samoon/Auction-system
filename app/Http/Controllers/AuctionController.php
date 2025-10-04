@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
-    public function index()
+public function index()
     {
-        $auctions = Auction::all();
+        $auctions = Auction::with('bids.user')->get();
         return view('auctions.index', compact('auctions'));
     }
-
+ 
     public function create()
     {
         return view('auctions.create');

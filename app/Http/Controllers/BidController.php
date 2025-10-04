@@ -7,40 +7,52 @@ use App\Models\Auction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+ 
+ 
+ 
 class BidController extends Controller
 {
-    public function create($auctionId)
+    // Show the form for placing a bid
+    public function create(Auction $auction)
     {
-        $auction = Auction::findOrFail($auctionId);
+
         return view('bids.create', compact('auction'));
     }
 
-    public function store(Request $request, Auction $auction)
+
+    // Store bid
+   public function store(Request $request, $auctionId)
 {
-    // Rule 1: User cannot bid on his own auction
+    $auction = Auction::findOrFail($auctionId);
+
+    // check auction status
+    if ($auction->status !== 'started') {
+        return back()->with('error', "You cannot bid, auction is {$auction->status}.");
+    }
+
+    // check if user is owner of auction
     if ($auction->user_id == auth()->id()) {
-        return back()->withErrors('You cannot bid on your own auction.');
+        return back()->with('error', "You cannot bid on your own auction.");
     }
 
-    // Rule 2: User can place max 3 bids on same auction
-    $userBidCount = $auction->bids()->where('user_id', auth()->id())->count();
-    if ($userBidCount >= 3) {
-        return back()->withErrors('You can only place up to 3 bids on this auction.');
+    // check if user already has 3 bids on this auction
+    $bidCount = $auction->bids()->where('user_id', auth()->id())->count();
+    if ($bidCount >= 3) {
+        return back()->with('error', "You can only place up to 3 bids on this auction.");
     }
 
-    // Validation
-    $request->validate([
-        'price' => 'required|numeric|min:1',
-    ]);
-
-    // Save bid
+    // create bid
     $auction->bids()->create([
-        'price' => $request->price,
         'user_id' => auth()->id(),
+        'price'   => $request->price,
     ]);
 
-    return redirect()->route('auctions.index')->with('success', 'Bid placed successfully!');
+    return back()->with('success', "Bid placed successfully!");
 }
 
 }
+
+
+
+
 
