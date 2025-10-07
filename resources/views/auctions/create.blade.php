@@ -10,6 +10,9 @@
 
 <form action="{{ route('auctions.store') }}" method="POST">
     @csrf
+    <label>Starting Price</label>
+<input type="number" name="starting_price" required min="1">
+
     <input type="text" name="product" placeholder="Product Name" required>
     <input type="datetime-local" name="auction_start" required>
     <input type="datetime-local" name="auction_end" required>

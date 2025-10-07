@@ -9,17 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+public function up(): void
+ 
 {
     Schema::create('auctions', function (Blueprint $table) {
         $table->id();
-        $table->string('product');
- $table->timestamp('auction_start')->useCurrent();
-$table->timestamp('auction_end')->useCurrent();
+        $table->string('title');  
+        $table->string('product'); 
+        $table->decimal('starting_price', 10, 2);  
+$table->enum('status', ['pending', 'started', 'sold', 'expired'])->default('pending');
+        $table->timestamp('auction_start')->useCurrent();
+        $table->timestamp('auction_end')->useCurrent();
 
-
+        $table->unsignedBigInteger('user_id'); 
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+   
         $table->timestamps();
     });
+
+
 }
 
 

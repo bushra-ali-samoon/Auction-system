@@ -9,24 +9,23 @@ class Auction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product', 'auction_start', 'auction_end'];
+    protected $fillable = [
+        'title',
+        'product',
+        'starting_price',
+        'auction_start',
+        'auction_end',
+        'user_id',
+        'status',
+    ];
 
- public function bids()
-{
-    return $this->hasMany(Bid::class);
-}
-// public function getStatusAttribute()
-// {
-//     $now = now();
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
 
-//     if ($now->lt($this->auction_start)) {
-//         return 'pending';
-//     } elseif ($now->between($this->auction_start, $this->auction_end)) {
-//         return 'started';
-//     } else {
-//         return 'ended';
-//     }
-// }
-
-
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

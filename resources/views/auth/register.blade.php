@@ -13,6 +13,12 @@
     <input type="email" name="email" placeholder="Email" required>
     <input type="password" name="password" placeholder="Password" required>
     <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+    <label for="role">Role</label>
+<select name="role" required>
+    <option value="buyer">Buyer</option>
+    <option value="seller">Seller</option>
+</select>
+
     <button type="submit">Register</button>
 </form>
 

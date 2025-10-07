@@ -24,5 +24,16 @@ Route::get('/', function () {
     return view('welcome');
 });
  
-Route::get('auctions/{auction}/bids/create', [BidController::class, 'create'])->name('bids.create')->middleware('auth');
-Route::post('auctions/{auction}/bids', [BidController::class, 'store'])->name('bids.store')->middleware('auth');
+// Route::get('auctions/{auction}/bids/create', [BidController::class, 'create'])->name('bids.create')->middleware('auth');
+// Route::post('auctions/{auction}/bids', [BidController::class, 'store'])->name('bids.store')->middleware('auth');
+Route::get('/auctions/{auction}/bids/create', [BidController::class, 'create'])->name('bids.create');
+Route::post('/auctions/{auction}/bids', [BidController::class, 'store'])->name('bids.store');
+Route::post('/bids/{bid}/accept', [BidController::class, 'accept'])->name('bids.accept');Route::get('/my-auctions', [AuctionController::class, 'myAuctions'])->middleware('auth');
+// Seller: view all bids of an auction
+Route::get('/auctions/{id}/bids', [BidController::class, 'sellerBids'])->name('auctions.sellerBids');
+
+   // Seller views all bids
+    Route::get('/auctions/{auction}/seller-bids', [BidController::class, 'sellerBids'])->name('auctions.sellerBids');
+
+    // Seller accepts a bid
+    Route::get('/bids/{id}/accept', [BidController::class, 'accept'])->name('bids.accept');

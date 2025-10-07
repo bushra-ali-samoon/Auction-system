@@ -17,8 +17,9 @@ return new class extends Migration
         $table->unsignedBigInteger('user_id');
         $table->unsignedBigInteger('auction_id');
         $table->timestamps();
+        $table->boolean('winner')->default(0);
 
-        // Foreign keys
+         // Foreign keys
         $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade');
     });

@@ -7,56 +7,51 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
-public function index()
+    // List all auctions
+    public function index()
     {
         $auctions = Auction::with('bids.user')->get();
         return view('auctions.index', compact('auctions'));
     }
- 
+
+    // Show create auction form
     public function create()
     {
         return view('auctions.create');
     }
 
+    // Store new auction
     public function store(Request $request)
     {
+        if (auth()->user()->role !== 'seller') {
+            abort(403, 'Only sellers can create auctions.');
+        }
+
         $request->validate([
             'product' => 'required|string|max:255',
+            'starting_price' => 'required|numeric|min:1',
             'auction_start' => 'required|date',
             'auction_end'   => 'required|date|after_or_equal:auction_start',
         ]);
 
-        Auction::create($request->all());
+        Auction::create([
+            'title' => $request->product,
+            'product' => $request->product,
+            'starting_price' => $request->starting_price,
+            'auction_start' => $request->auction_start,
+            'auction_end' => $request->auction_end,
+            'user_id' => auth()->id(),
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('auctions.index')->with('success', 'Auction created successfully!');
     }
 
-    public function show(Auction $auction)
+    // Show auction details
+    public function show($id)
     {
+        $auction = Auction::with('bids.user')->findOrFail($id);
         return view('auctions.show', compact('auction'));
     }
-
-    public function edit(Auction $auction)
-    {
-        return view('auctions.edit', compact('auction'));
-    }
-
-    public function update(Request $request, Auction $auction)
-    {
-        $request->validate([
-            'product' => 'required|string|max:255',
-            'auction_start' => 'required|date',
-            'auction_end'   => 'required|date|after_or_equal:auction_start',
-        ]);
-
-        $auction->update($request->all());
-
-        return redirect()->route('auctions.index')->with('success', 'Auction updated successfully!');
-    }
-
-    public function destroy(Auction $auction)
-    {
-        $auction->delete();
-        return redirect()->route('auctions.index')->with('success', 'Auction deleted successfully!');
-    }
+    
 }
